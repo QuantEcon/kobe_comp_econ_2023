@@ -13,7 +13,6 @@ kernelspec:
 
 # Monte Carlo and Option Pricing 
 
-* Written for the RSE QuantEcon Workshop (February 2023)
 * Author: [John Stachurski](http://johnstachurski.net/)
 
 We discuss [Monte Carlo
@@ -38,10 +37,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numba
 from numpy.random import randn
-```
-
-```{code-cell} ipython3
-sqrt(2)
 ```
 
 ## An Introduction to Monte Carlo
@@ -147,19 +142,6 @@ $$
     \approx \mathbb E S
 $$
 
-```{code-cell} ipython3
-%%time
-
-S = 0.0
-for i in range(n):
-    X_1 = np.exp(μ_1 + σ_1 * randn())
-    X_2 = np.exp(μ_2 + σ_2 * randn())
-    X_3 = np.exp(μ_3 + σ_3 * randn())
-    S += (X_1 + X_2 + X_3)**p
-S / n
-```
-
-Let's construct a function that contains these operations:
 
 ```{code-cell} ipython3
 def compute_mean(n=10_000_000):
@@ -171,6 +153,8 @@ def compute_mean(n=10_000_000):
         S += (X_1 + X_2 + X_3)**p
     return(S / n)
 ```
+
+Let's test it and see how long it takes.
 
 ```{code-cell} ipython3
 compute_mean()
