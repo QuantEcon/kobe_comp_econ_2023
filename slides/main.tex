@@ -3,6 +3,7 @@
     hyperref={colorlinks, citecolor=DeepPink4, linkcolor=DarkRed, urlcolor=DarkBlue}
     ]{beamer}  % for hardcopy add 'trans'
 
+
 \mode<presentation>
 {
   \usetheme{Singapore}
@@ -193,13 +194,12 @@
 
 
 
-\title{RSE-QuantEcon \\
-    Computational Economics Workshop}
+\title{Computational Methods for Quantitative Economics}
 
-\author{An introduction to computational methods \\ for economics and finance}
+\author{John Stachurski}
 
 
-\date{10:00am -- 12:00am February 16th 2022}
+\date{April 2023}
 
 
 \begin{document}
@@ -215,42 +215,21 @@
 \section{Introduction}
 
 
-%\begin{frame}
-    %\frametitle{Acknowledgement of Country}
-
-    %We acknowledge and celebrate the First Australians on whose traditional
-    %lands we meet. 
-
-    %We pay our respect to the elders past and present.
-
-%\end{frame}
-
-
 
 \begin{frame}
     %\frametitle{Introduction}
 
-    \textbf{Speakers}
-
-    \begin{itemize}
-        \item \green{Thomas J.\ Sargent (NYU)}
-            \vspace{0.5em}
-        \item \green{John Stachurski (RSE)}
-            \vspace{0.5em}
-        \item \green{VC?}
-            \vspace{0.5em}
-    \end{itemize}
 
     \textbf{Topics}
 
     \begin{itemize}
-        \item Introduction to scientific computing
+        \item Discussion of scientific computing
+        \vspace{0.5em}
+        \item Computing equilibria
         \vspace{0.5em}
         \item Option pricing with Python
         \vspace{0.5em}
-        \item Discussion of high performance computing
-        \vspace{0.5em}
-        \item Dynamic programming with Python
+        \item High dimensional problems
     \end{itemize}
 
 \end{frame}
@@ -263,9 +242,9 @@
     Assumptions:
 
     \begin{itemize}
-        \item econ/computer/maths/stats literate
+        \item basic econ/computer/maths/stats 
         \vspace{0.3em}
-        \item programming not required
+        \item some programming?
     \end{itemize}
 
     \vspace{0.3em}
@@ -285,7 +264,7 @@
     \textbf{Resources}
 
     \begin{itemize}
-        \item \url{https://github.com/QuantEcon/rse_comp_econ_2023}
+        \item \url{https://github.com/QuantEcon/kobe_comp_econ_2023}
     \end{itemize}
 
 
@@ -466,7 +445,7 @@ print("1 + 1 = ", sum)
 
     \begin{figure}
        \begin{center}
-        \scalebox{.36}{\includegraphics{tradeoff.pdf}}
+        \scalebox{.46}{\includegraphics{ppf.pdf}}
        \end{center}
     \end{figure}
 
@@ -476,21 +455,7 @@ print("1 + 1 = ", sum)
 
 \begin{frame}[fragile]
 
-    \emp{But what about scientific computing?}
-    
-            \vspace{0.4em}
-            \vspace{0.4em}
-            \vspace{0.4em}
-
-    Requirements:
-
-    \begin{itemize}
-        \item \underline{\green{Productive}} --- easy to read, write, debug, explore
-            \vspace{0.4em}
-            \vspace{0.4em}
-            \vspace{0.4em}
-        \item \underline{\green{Fast}} computations
-    \end{itemize}
+    New trend --- a shifting frontier
 
 \end{frame}
 
@@ -503,37 +468,13 @@ print("1 + 1 = ", sum)
 
     \begin{figure}
        \begin{center}
-        \scalebox{.36}{\includegraphics{tradeoff2.pdf}}
+        \scalebox{.46}{\includegraphics{ppf_plus.pdf}}
        \end{center}
     \end{figure}
 
 \end{frame}
 
 
-\begin{frame}
-
-    Trade-offs:
-
-    \begin{figure}
-       \begin{center}
-        \scalebox{.36}{\includegraphics{tradeoff3.pdf}}
-       \end{center}
-    \end{figure}
-
-\end{frame}
-
-
-\begin{frame}
-
-    Trade-offs:
-
-    \begin{figure}
-       \begin{center}
-        \scalebox{.36}{\includegraphics{tradeoff4.pdf}}
-       \end{center}
-    \end{figure}
-
-\end{frame}
 
 
 
@@ -810,31 +751,6 @@ print("1 + 1 = ", sum)
 
 \end{frame}
 
-
-
-\begin{frame}
-    \frametitle{RA Work}
-
-    We and other academics are looking for talented RAs
-
-            \vspace{0.5em}
-    Ideal skills
-
-    \begin{itemize}
-        \item git and GitHub
-            \vspace{0.5em}
-        \item Python
-            \vspace{0.5em}
-        \item scientific libraries
-            \vspace{0.5em}
-        \item maths
-            \vspace{0.5em}
-        \item stats
-            \vspace{0.5em}
-        \item economics
-    \end{itemize}
-
-\end{frame}
 
 
 
