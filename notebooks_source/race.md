@@ -23,7 +23,7 @@ kernelspec:
 
 ```{code-cell} ipython3
 import numpy as np
-from numba import vectorize, jit, float64
+from numba import jit
 from quantecon.util import tic, toc
 import matplotlib.pyplot as plt
 ```
@@ -136,35 +136,18 @@ END PROGRAM MAIN
 !rm a.out
 ```
 
-## Python + Numba
-
-+++
-
-Now let's do the same thing in Python using Numba's JIT compilation:
-
-```{code-cell} ipython3
-quad_jitted = jit(quad)
-```
-
-```{code-cell} ipython3
-tic()
-x = quad_jitted(0.2, n)
-toc()
-```
-
-```{code-cell} ipython3
-tic()
-x = quad_jitted(0.2, n)
-toc()
-```
-
-
 ## Codon
 
+Let's try `codon`, an AOT Python compiler
+
+First we have to install it.
 
 ```{code-cell} ipython3
 !/bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
 ```
+
+Now we write Python code to a file.
+
 
 ```{code-cell} ipython3
 %%file codon_quad.py
@@ -188,13 +171,19 @@ print(x)
 print(t1 - t0)
 ```
 
+Next we compile the Python code to build an executable.
+
 ```{code-cell} ipython3
 !codon build --release --exe codon_quad.py
 ```
 
+Now let's run it.
+
 ```{code-cell} ipython3
 !./codon_quad
 ```
+
+Tidying up:
 
 ```{code-cell} ipython3
 !rm codon_quad
@@ -203,3 +192,41 @@ print(t1 - t0)
 ```{code-cell} ipython3
 
 ```
+
+
+## Python + Numba
+
++++
+
+Now let's replicate the calculations using Numba's JIT compiler.
+
+Here's the Python function we want to speed up
+
+
+```{code-cell} ipython3
+@jit
+def quad(x0, n):
+    x = x0
+    for i in range(1, n):
+        x = α * x * (1 - x)
+    return x
+```
+
+This is the same as before except that we've targeted the function for JIT
+compilation with `@jit`.
+
+Let's see how fast it runs.
+
+```{code-cell} ipython3
+tic()
+x = quad(0.2, n)
+toc()
+```
+
+```{code-cell} ipython3
+tic()
+x = quad(0.2, n)
+toc()
+```
+
+
