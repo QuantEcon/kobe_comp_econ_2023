@@ -15,7 +15,6 @@ kernelspec:
 
 +++
 
-#### Written for the CBC QuantEcon Workshop (September 2022)
 #### Author: [John Stachurski](http://johnstachurski.net/)
 
 +++
@@ -43,11 +42,22 @@ We start with a guess $x_0 \in (a, b)$.
 
 Then we replace $f$ with the tangent function $f_a(x) = f(x_0) + f'(x_0)(x - x_0)$ and solve for the root of $f_a$ (which can be done exactly).
 
-In other words, we solve the simple equation $f_a(x)=0$ to get 
+Calling the root $x_1$, we have
 
-$$ x_1 = x_0 - \frac{f(x_0)}{f'(x_0)} $$
+$$ 
+    f_a(x_1)=0
+    \quad \iff \quad
+    x_1 = x_0 - \frac{f(x_0)}{f'(x_0)} 
+$$
 
-Then we repeat to get $x_2, x_3, \ldots$
+This is our update rule:
+
+$$
+    x_{k+1} = q(x_k)
+    \quad \text{where} \quad
+    q(x) := x - \frac{f(x)}{f'(x)} 
+$$
+
 
 +++
 
@@ -59,16 +69,22 @@ from scipy.optimize import newton
 
 Let's apply this to find the positive root of $f(x) = x^2 - 1$.
 
-We will use a `lambda` expression to create the function $f$.
-
 ```{code-cell} ipython3
-newton(lambda x: x**2 - 1, 0.5)
+def f(x):
+    return x**2 - 1
+
+newton(f, 0.5)   # search for root of f starting at x_0 = 0.5
 ```
 
-Here we didn't supply the gradient of $f(x)=x-1$ so it was approximated numerically.  We can supply it as follows:
+We didn't supply the gradient of $f$ so it was approximated numerically.  
+
+We can supply it as follows:
 
 ```{code-cell} ipython3
-newton(lambda x: x**2 - 1, 0.5, fprime=lambda x: 2*x)
+def f_prime(x):
+    return 2 * x
+
+newton(lambda x: x**2 - 1, 0.5, fprime=f_prime)
 ```
 
 ## The Market
