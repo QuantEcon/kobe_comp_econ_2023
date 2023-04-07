@@ -153,16 +153,27 @@ Plot both supply and demand as functions of $p$ on the interval $[0, 10]$ at the
 ```
 
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
 
 ```{code-cell} ipython3
@@ -191,17 +202,29 @@ $$ e(p) = q_d(p) - q_s(p) $$
 ```
 
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 
 ```{code-cell} ipython3
 def excess_demand(p, a=1, b=0.5, c=1):
@@ -256,17 +279,29 @@ Using these functions, plot excess demand over the interval from $0.2$ up to $10
 
 
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 
 ```{code-cell} ipython3
 params = create_market_params()
@@ -293,17 +328,29 @@ Write a function that takes an instance of `Params` (i.e, a parameter vector) an
 
 
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 
 ```{code-cell} ipython3
 def compute_equilibrium(params, price_init=2.0):
@@ -332,17 +379,29 @@ Does the curve that you plotted slope up or down?  Try to provide an explanation
 
 
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 
 
 ```{code-cell} ipython3

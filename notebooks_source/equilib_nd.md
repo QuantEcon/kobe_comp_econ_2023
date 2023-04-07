@@ -405,17 +405,29 @@ plt.show()
 
 
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 solution below
+
 
 ```{code-cell} ipython3
 def newton(f, x_0, tol=1e-5):
