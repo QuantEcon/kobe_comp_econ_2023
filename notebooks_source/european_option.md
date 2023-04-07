@@ -157,14 +157,14 @@ def compute_mean(n=10_000_000):
 Let's test it and see how long it takes.
 
 ```{code-cell} ipython3
+%%time
+
 compute_mean()
 ```
 
 #### Using Numba's JIT Compiler
 
 ```{code-cell} ipython3
-:tags: []
-
 compute_mean_numba = numba.jit(compute_mean)
 ```
 

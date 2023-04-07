@@ -15,7 +15,6 @@ kernelspec:
 
 +++
 
-#### Written for the CBC Quantitative Economics Workshop (September 2022)
 
 #### Author: [John Stachurski](http://johnstachurski.net/)
 
@@ -125,9 +124,9 @@ def plot_excess_demand(ax, good=0, grid_size=100, grid_max=4, surface=True):
     p_grid = np.linspace(0, grid_max, grid_size)
     z = np.empty((100, 100))
 
-    for i, p_1 in enumerate(p_grid):
-        for j, p_2 in enumerate(p_grid):
-            z[i, j] = e((p_1, p_2), A, b, c)[good]
+    for i, p_0 in enumerate(p_grid):
+        for j, p_1 in enumerate(p_grid):
+            z[i, j] = e((p_0, p_1), A, b, c)[good]
 
     if surface:
         cs1 = ax.contourf(p_grid, p_grid, z.T, alpha=0.5)
@@ -135,6 +134,8 @@ def plot_excess_demand(ax, good=0, grid_size=100, grid_max=4, surface=True):
 
     ctr1 = ax.contour(p_grid, p_grid, z.T, levels=[0.0])
     plt.clabel(ctr1, inline=1, fontsize=13)
+    ax.set_xlabel("$p_0$")
+    ax.set_ylabel("$p_1$")
 ```
 
 Here's our plot of $e_0$:
@@ -315,10 +316,11 @@ np.max(np.abs(e(p, A, b, c)))
 
 To produce a faster and more efficient implementation, we shift to using JAX.
 
-With JAX, we get to big advantages:
+With JAX, we get three big advantages:
 
-1. We can use automatic differentiation to compute the Jacobian, rather than doing it by hand.
-2. JAX can parallelize the problem (and send it to the GPU if configured).
+1. We can use JAX's automatic differentiation to compute the Jacobian easily and efficiently.
+2. JAX can parallelize the problem.
+3. JAX can dispatch to the GPU, if configured
 
 ```{code-cell} ipython3
 !nvidia-smi
