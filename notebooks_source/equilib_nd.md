@@ -29,7 +29,11 @@ from scipy.optimize import newton, root
 
 In this notebook we expore the problem of computing market equilibrium in a multivariate setting, with many goods.
 
-As a first step, we set up and solve a two-good problem.  Then we shift to higher dimensions.  We will show how gradient-based equation solvers can handle high dimensional problems.
+As a first step, we set up and solve a two-good problem.  
+
+Then we shift to higher dimensions.  
+
+We will show how gradient-based equation solvers can handle high dimensional problems.
 
 +++
 
@@ -45,11 +49,9 @@ $$ q^s_i (p) = b_i \sqrt{p_i} $$
 
 Demand of good $i$ at price $p$ is
 
-$$ q^d_i (p) = \exp(-a_{i0} p_0) + \exp(-a_{i1} p_1) + c_i$$
+$$ q^d_i (p) = \exp(-a_{i0} p_0 - a_{i1} p_1) + c_i$$
 
 Here $c_i, b_i$ and $a_{ij}$ are parameters.  
-
-For example, the two goods might be computer components that are typically used together, in which case they are complements.  Hence demand depends on the price of both components.
 
 The excess demand functions are
 
@@ -374,3 +376,61 @@ np.max(np.abs(e(p, A, b, c)))
 ```
 
 We still have a solution that's very accurate and the compute time is massively reduced (assuming JAX is connecting to a GPU).
+
+
+### Exercise 
+
+Write a simplified version of the `newton` function above that works for
+scalar functions (real inputs and real outputs).
+
+Test it on this function:
+
+```{code-cell} ipython3
+f = lambda x: jnp.sin(4 * (x - 1/4)) + x + x**20 - 1
+x = jnp.linspace(0, 1, 100)
+
+fig, ax = plt.subplots()
+ax.plot(x, f(x), label='$f(x)$')
+ax.axhline(ls='--', c='k')
+ax.set_xlabel('$x$', fontsize=12)
+ax.set_ylabel('$f(x)$', fontsize=12)
+ax.legend(fontsize=12)
+plt.show()
+```
+
+
+```{code-cell} ipython3
+# Put your code here
+```
+
+
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+
+```{code-cell} ipython3
+def newton(f, x_0, tol=1e-5):
+    f_prime = jax.grad(f)
+    def q(x):
+        return x - f(x) / f_prime(x)
+
+    error = tol + 1
+    x = x_0
+    while error > tol:
+        y = q(x)
+        error = abs(x - y)
+        x = y
+        
+    return x
+
+newton(f, 0.2)
+```

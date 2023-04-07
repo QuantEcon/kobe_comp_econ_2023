@@ -415,8 +415,8 @@ popq    %rbp
     \begin{minted}{c}
 #include <stdio.h>
 int main() {
-    int sum = 1 + 1;
-    printf("1 + 1 = %d\n", sum);
+    int x = 1 + 1;
+    printf("1 + 1 = %d\n", x);
     return 0;
 }   
     \end{minted}
@@ -424,14 +424,34 @@ int main() {
 
 \end{frame}
 
+
+
+\begin{frame}[fragile]
+
+    \Eg \brown{1 + 1} in Fortran
+
+    {\small
+    \begin{minted}{fortran}
+PROGRAM ONE_PLUS_ONE  
+INTEGER :: X = 1 + 1 
+PRINT *, '1 + 1 = ', X
+END PROGRAM ONE_PLUS_ONE 
+    \end{minted}
+    }
+
+\end{frame}
+
+
+
+
 \begin{frame}[fragile]
 
     \Eg \brown{1 + 1} in Python
 
     {\small
     \begin{minted}{python}
-sum = 1 + 1
-print("1 + 1 = ", sum)
+x = 1 + 1
+print("1 + 1 = ", x)
     \end{minted}
     }
 

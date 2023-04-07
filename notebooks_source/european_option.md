@@ -419,10 +419,20 @@ M = 10_000_000
 # Put your code here
 ```
 
-```{code-cell} ipython3
-for _ in range(12):
-    print('solution below')
-```
+
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+
 
 ```{code-cell} ipython3
 S = np.exp(μ + σ * np.random.randn(M))
@@ -457,10 +467,18 @@ where
 
 Show that, under the stated assumptions, $S_n$ is lognormally distributed.
 
-```{code-cell} ipython3
-for _ in range(12):
-    print('solution below')
-```
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
 
 With $s_t := \ln S_t$, the price dynamics become
 
@@ -542,10 +560,18 @@ Plot 50 paths of the form $S_0, \ldots, S_n$.
 # Put your code here
 ```
 
-```{code-cell} ipython3
-for _ in range(12):
-    print('solution below')
-```
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
 
 With $s_t := \ln S_t$, the price dynamics become
 
@@ -603,10 +629,19 @@ In particular, try to speed up the code above using `jit` or `njit` from Numba.
 # Put your code here
 ```
 
-```{code-cell} ipython3
-for _ in range(12):
-    print('solution below')
-```
+
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
 
 ```{code-cell} ipython3
 from numba import njit, prange
@@ -651,10 +686,19 @@ If you can, use `prange` from Numba to parallelize this code and make it even fa
 # Put your code here
 ```
 
-```{code-cell} ipython3
-for _ in range(12):
-    print('solution below')
-```
+
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
 
 ```{code-cell} ipython3
 @njit(parallel=True)
@@ -713,10 +757,19 @@ Try to shift the whole operation to the GPU using JAX and test your speed gain.
 # Put your code here
 ```
 
-```{code-cell} ipython3
-for _ in range(12):
-    print('solution below')
-```
+
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
+solution below
 
 ```{code-cell} ipython3
 !nvidia-smi
