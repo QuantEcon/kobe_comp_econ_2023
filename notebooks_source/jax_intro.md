@@ -44,6 +44,14 @@ Here is a short history of JAX:
 
 +++
 
+We begin this notebook with some standard imports
+
+```{code-cell} ipython3
+import numpy as np
+import matplotlib as plt
+from numba import jit, njit, float64, vectorize
+```
+
 ## Installation
 
 JAX can be installed with or without GPU support.
@@ -155,7 +163,7 @@ Let's check this works:
 jnp.ones(3)
 ```
 
-As a NumPy replacement, a more significant difference is that arrays are treated as **immutable**.  For example, with NumPy we can write 
+As a NumPy replacement, a more significant difference is that arrays are treated as **immutable**.  For example, with NumPy we can write
 
 ```{code-cell} ipython3
 import numpy as np
@@ -219,7 +227,6 @@ id(a)
 ```
 
 ## Random Numbers
-
 
 +++
 
@@ -449,8 +456,6 @@ plt.show()
 
 ```
 
-
-
 ## Application: Multivariate Optimization
 
 
@@ -460,13 +465,12 @@ $$ f(x, y) = \frac{\cos \left(x^2 + y^2 \right)}{1 + x^2 + y^2} + 1$$
 
 using brute force --- searching over a grid of $(x, y)$ pairs.
 
-```python
+```{code-cell} ipython3
 def f(x, y):
     return np.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
 ```
 
-```python
-
+```{code-cell} ipython3
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from matplotlib import cm
 
@@ -477,7 +481,7 @@ ygrid = xgrid
 x, y = np.meshgrid(xgrid, ygrid)
 
 # === plot value function === #
-fig = plt.figure(figsize=(10, 8))
+fig = plt.figure(figsize=(8, 6))
 ax = fig.add_subplot(111, projection='3d')
 ax.plot_surface(x,
                 y,
@@ -498,23 +502,20 @@ ax.set_xlim(gmin, gmax)
 ax.set_ylim(gmin, gmax)
 
 plt.show()
-
 ```
 
-### Vectorized code
+### Vectorized Numpy 
 
-```python
+```{code-cell} ipython3
 grid = np.linspace(-3, 3, 10000)
-```
 
-```python
 x, y = np.meshgrid(grid, grid)
 ```
 
-```python nbpresent={"id": "1ba9f9f9-f737-4ee1-86e6-0a33c4752188"}
-tic()
+```{code-cell} ipython3
+%%time
+
 np.max(f(x, y))
-toc()
 ```
 
 ### JITTed code
@@ -522,7 +523,7 @@ toc()
 
 A jitted version
 
-```{code-cell} python
+```{code-cell} ipython3
 @jit
 def compute_max():
     m = -np.inf
@@ -534,45 +535,60 @@ def compute_max():
     return m
 ```
 
-```{code-cell} python
+```{code-cell} ipython3
 compute_max()
 ```
 
-```{code-cell} python
-tic()
+```{code-cell} ipython3
+%%time
 compute_max()
-toc()
 ```
+
+### Vectorized Numba on the CPU
+
++++
 
 Numba for vectorization with automatic parallelization - even faster:
 
-```{code-cell} python 
+```{code-cell} ipython3
 @vectorize('float64(float64, float64)', target='parallel')
 def f_par(x, y):
     return np.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
 ```
 
-```{code-cell} python
+```{code-cell} ipython3
 x, y = np.meshgrid(grid, grid)
 
 np.max(f_par(x, y))
 ```
 
-```{code-cell} python
-tic()
+```{code-cell} ipython3
+%%time
 np.max(f_par(x, y))
-toc()
 ```
 
+### JAX on the GPU
 
+```{code-cell} ipython3
+def f(x, y):
+    return jnp.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
+```
 
+```{code-cell} ipython3
+grid = np.linspace(-3, 3, 10000)
 
+x, y = jnp.meshgrid(grid, grid)
+```
 
+```{code-cell} ipython3
+%%time
 
+jnp.max(f(x, y))
+```
 
 ### Exercise
 
-Recall that Newton's method for solving for the root of $f$ involves iterating on 
+Recall that Newton's method for solving for the root of $f$ involves iterating on
 
 +++
 
