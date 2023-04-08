@@ -62,6 +62,10 @@ Note that JAX is pre-installed with GPU support on [Google Colab](https://colab.
 
 (Colab Pro offers better GPUs.)
 
+```{code-cell} ipython3
+!nvidia-smi
+```
+
 +++
 
 ## JAX as a NumPy Replacement
@@ -447,7 +451,7 @@ plt.style.use('fivethirtyeight')
 fig, ax = plt.subplots()
 x_grid = jnp.linspace(-4, 4, 200)
 ax.plot(x_grid, f(x_grid), label="$f$")
-ax.plot(x_grid, [f_prime(x) for x in x_grid], label="$f'$")
+ax.plot(x_grid, jax.vmap(f_prime)(x_grid), label="$f'$")
 ax.legend(loc='upper center')
 plt.show()
 ```
@@ -504,6 +508,10 @@ ax.set_ylim(gmin, gmax)
 plt.show()
 ```
 
+Let's try a few different methods to make it fast.
+
+Then we'll compare with JAX on the GPU.
+
 ### Vectorized Numpy 
 
 ```{code-cell} ipython3
@@ -546,9 +554,8 @@ compute_max()
 
 ### Vectorized Numba on the CPU
 
-+++
 
-Numba for vectorization with automatic parallelization - even faster:
+Numba for vectorization with automatic parallelization;
 
 ```{code-cell} ipython3
 @vectorize('float64(float64, float64)', target='parallel')
@@ -569,6 +576,10 @@ np.max(f_par(x, y))
 
 ### JAX on the GPU
 
+Now let's try JAX.
+
+Warning --- you need a GPU with relatively large memory for this to work.
+
 ```{code-cell} ipython3
 def f(x, y):
     return jnp.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
@@ -586,7 +597,7 @@ x, y = jnp.meshgrid(grid, grid)
 jnp.max(f(x, y))
 ```
 
-### Exercise
+## Exercise
 
 Recall that Newton's method for solving for the root of $f$ involves iterating on
 
@@ -642,6 +653,42 @@ newton(f, 0.2)
 
 This number looks good, given the figure.
 
-```{code-cell} ipython3
 
+
+## Exercise
+
+Let's redefine the brute force objective
+
+```{code-cell} ipython3
+@jax.jit
+def f(x):
+    return jnp.cos(x[0]**2 + x[1]**2) / (1 + x[0]**2 + x[1]**2) + 1
+
+f_grad = jax.grad(f)
+
+def update(x, f, f_grad, alpha=0.01):
+    return x + alpha * f_grad(x)
+
+x_0 = jnp.array((0.7, 0.7))
+x_0
+update(x_0, f, f_grad)
+update_vec = jax.vmap(update, (0, None, None))
+key = jax.random.PRNGKey(1)
+n = 1000
+xs = random.uniform(key, (n, 2), minval=-3.0, maxval=3.0)
+xs
+update_vec(xs, f, f_grad)
+def gradient_ascent(f, f_grad, x_0, tol=1e-8, alpha=1e-2, max_iter=10_000):
+    error = tol + 1
+    x = x_0
+    i = 0
+    while error > tol and i < max_iter:
+        y = update_vec(x, f, f_grad)
+        error = jnp.linalg.norm(x - y)
+        x = y
+        i += 1
+        
+    return jnp.max(jax.vmap(f)(x)), i
+gradient_ascent(f, f_grad, xs)
 ```
+
