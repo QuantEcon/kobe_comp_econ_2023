@@ -13,8 +13,6 @@ kernelspec:
 
 # An Introduction to JAX
 
-#### Prepared for the CBC QuantEcon Workshop (September 2022)
-
 #### John Stachurski
 
 +++
@@ -51,6 +49,7 @@ import numpy as np
 import matplotlib as plt
 from numba import jit, njit, float64, vectorize
 ```
+
 
 ## Installation
 
@@ -356,7 +355,7 @@ And now let's time it.
 
 From JAX's documentation:
 
-*When walking about the countryside of Italy, the people will not hesitate to tell you that JAX has “una anima di pura programmazione funzionale”.*
+*When walking about the countryside of Italy, the people will not hesitate to tell you that JAX has "una anima di pura programmazione funzionale".*
 
 +++
 
@@ -490,10 +489,28 @@ plt.show()
 # Put your code here
 ```
 
-```{code-cell} ipython3
-for _ in range(14):
-    print("solution below")
-```
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+
+
 
 ```{code-cell} ipython3
 def newton(f, x_0, tol=1e-5):
@@ -521,27 +538,71 @@ This number looks good, given the figure.
 
 ## Exercise
 
-Let's redefine the brute force objective
+This exercise uses parallelized gradient ascent to maximize a function.
+
+Here's the function we want to maximize
 
 ```{code-cell} ipython3
 @jax.jit
 def f(x):
     return jnp.cos(x[0]**2 + x[1]**2) / (1 + x[0]**2 + x[1]**2) + 1
 
-f_grad = jax.grad(f)
+```
 
+Here's one update step of gradient ascent
+
+```{code-cell} ipython3
+f_grad = jax.grad(f)
 def update(x, f, f_grad, alpha=0.01):
     return x + alpha * f_grad(x)
 
 x_0 = jnp.array((0.7, 0.7))
 x_0
 update(x_0, f, f_grad)
+```
+
+Let's vectorize it:
+
+```{code-cell} ipython3
 update_vec = jax.vmap(update, (0, None, None))
 key = jax.random.PRNGKey(1)
 n = 1000
 xs = random.uniform(key, (n, 2), minval=-3.0, maxval=3.0)
 xs
 update_vec(xs, f, f_grad)
+```
+
+The exercise is to run this in a loop and compute an approximate maximum of
+the function.
+
+```{code-cell} ipython3
+# Put your code here
+```
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+solution below
+
+
+Here's a suitable function for the loop phase.
+
+```{code-cell} ipython3
 def gradient_ascent(f, f_grad, x_0, tol=1e-8, alpha=1e-2, max_iter=10_000):
     error = tol + 1
     x = x_0
@@ -553,6 +614,11 @@ def gradient_ascent(f, f_grad, x_0, tol=1e-8, alpha=1e-2, max_iter=10_000):
         i += 1
         
     return jnp.max(jax.vmap(f)(x)), i
-gradient_ascent(f, f_grad, xs)
 ```
 
+Now let's call it, starting from `xs`
+
+
+```{code-cell} ipython3
+gradient_ascent(f, f_grad, xs)
+```

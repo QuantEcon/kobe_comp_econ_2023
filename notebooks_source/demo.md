@@ -11,21 +11,20 @@ kernelspec:
   name: python3
 ---
 
-# New JIT and AOT Compilers
+
+# Accelerating Python
 
 +++
 
 [John Stachurski](http://johnstachurski.net)
 
-```{code-cell} ipython3
-!pip install quantecon
-```
 
 ```{code-cell} ipython3
 import numpy as np
 from numba import jit
-from quantecon.util import tic, toc
 import matplotlib.pyplot as plt
+import jax
+import jax.numpy as jnp
 ```
 
 
@@ -78,9 +77,8 @@ n = 10_000_000
 ```
 
 ```{code-cell} ipython3
-tic()
+%%time
 x = quad(0.2, n)
-toc()
 ```
 
 ### Fortran Test
@@ -220,20 +218,18 @@ compilation with `@jit`.
 Let's see how fast it runs.
 
 ```{code-cell} ipython3
-tic()
+%%time
 x = quad(0.2, n)
-toc()
 ```
 
 ```{code-cell} ipython3
-tic()
+%%time
 x = quad(0.2, n)
-toc()
 ```
 
 
-## Problem 2: Multivariate Optimization
 
+## Problem 2: Multivariate Optimization
 
 The problem is to maximize the function 
 
@@ -282,7 +278,7 @@ plt.show()
 
 Let's try a few different methods to make it fast.
 
-Then we'll compare with JAX on the GPU.
+
 
 ### Vectorized Numpy 
 
@@ -345,6 +341,8 @@ np.max(f_par(x, y))
 %%time
 np.max(f_par(x, y))
 ```
+
+
 
 ### JAX on the GPU
 
@@ -464,7 +462,7 @@ p = 0.5
 σ_1, σ_2, σ_3 = 0.1, 0.05, 0.2
 ```
 
-#### A Routine using Loops in Python
+### A Routine using Loops in Python
 
 +++
 
@@ -495,7 +493,7 @@ Let's test it and see how long it takes.
 compute_mean()
 ```
 
-#### Using Numba's JIT Compiler
+### Using Numba's JIT Compiler
 
 ```{code-cell} ipython3
 compute_mean_numba = numba.jit(compute_mean)
@@ -513,7 +511,7 @@ compute_mean_numba()
 compute_mean_numba()
 ```
 
-#### A Vectorized Routine
+### A Vectorized Routine
 
 +++
 
@@ -535,16 +533,11 @@ def compute_mean_vectorized(n=10_000_000):
 compute_mean_vectorized()
 ```
 
-#### Using Google JAX
+### Using Google JAX
 
-+++
 
-Finally, let's try to shift this to the GPU (if you have one) and parallelize it effectively.
+Finally, let's try to shift this to the GPU and parallelize it effectively.
 
-```{code-cell} ipython3
-import jax
-import jax.numpy as jnp
-```
 
 ```{code-cell} ipython3
 !nvidia-smi
