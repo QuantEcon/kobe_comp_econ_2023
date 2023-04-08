@@ -449,6 +449,127 @@ plt.show()
 
 ```
 
+
+
+## Application: Multivariate Optimization
+
+
+The problem is to maximize the function 
+
+$$ f(x, y) = \frac{\cos \left(x^2 + y^2 \right)}{1 + x^2 + y^2} + 1$$
+
+using brute force --- searching over a grid of $(x, y)$ pairs.
+
+```python
+def f(x, y):
+    return np.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
+```
+
+```python
+
+from mpl_toolkits.mplot3d.axes3d import Axes3D
+from matplotlib import cm
+
+gridsize = 50
+gmin, gmax = -3, 3
+xgrid = np.linspace(gmin, gmax, gridsize)
+ygrid = xgrid
+x, y = np.meshgrid(xgrid, ygrid)
+
+# === plot value function === #
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(x,
+                y,
+                f(x, y),
+                rstride=2, cstride=2,
+                cmap=cm.jet,
+                alpha=0.4,
+                linewidth=0.05)
+
+
+ax.scatter(x, y, c='k', s=0.6)
+
+ax.scatter(x, y, f(x, y), c='k', s=0.6)
+
+ax.view_init(25, -57)
+ax.set_zlim(-0, 2.0)
+ax.set_xlim(gmin, gmax)
+ax.set_ylim(gmin, gmax)
+
+plt.show()
+
+```
+
+### Vectorized code
+
+```python
+grid = np.linspace(-3, 3, 10000)
+```
+
+```python
+x, y = np.meshgrid(grid, grid)
+```
+
+```python nbpresent={"id": "1ba9f9f9-f737-4ee1-86e6-0a33c4752188"}
+tic()
+np.max(f(x, y))
+toc()
+```
+
+### JITTed code
+
+
+A jitted version
+
+```{code-cell} python
+@jit
+def compute_max():
+    m = -np.inf
+    for x in grid:
+        for y in grid:
+            z = np.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
+            if z > m:
+                m = z
+    return m
+```
+
+```{code-cell} python
+compute_max()
+```
+
+```{code-cell} python
+tic()
+compute_max()
+toc()
+```
+
+Numba for vectorization with automatic parallelization - even faster:
+
+```{code-cell} python 
+@vectorize('float64(float64, float64)', target='parallel')
+def f_par(x, y):
+    return np.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
+```
+
+```{code-cell} python
+x, y = np.meshgrid(grid, grid)
+
+np.max(f_par(x, y))
+```
+
+```{code-cell} python
+tic()
+np.max(f_par(x, y))
+toc()
+```
+
+
+
+
+
+
+
 ### Exercise
 
 Recall that Newton's method for solving for the root of $f$ involves iterating on 
