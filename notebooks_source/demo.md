@@ -24,6 +24,7 @@ We begin by importing some libraries that will be discussed below.
 
 ```{code-cell} ipython3
 import numpy as np
+from numpy.random import randn
 import numba 
 from numba import vectorize, float64
 import matplotlib.pyplot as plt
@@ -68,12 +69,13 @@ plt.show()
 
 +++
 
-Here's a function that simulates for `n` periods, starting from `x0`, and returns **only the final** value:
+Here's a function that iterates forward `n` times, starting from `x0`, and
+returns **the final** value:
 
 ```{code-cell} ipython3
 def quad(x0, n):
     x = x0
-    for i in range(1, n):
+    for i in range(n):
         x = α * x * (1 - x)
     return x
 ```

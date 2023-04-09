@@ -116,15 +116,18 @@ a
 type(a)
 ```
 
-Even scalar-valued maps on arrays are of type `DeviceArray`:
+Even scalar-valued maps on arrays return JAX arrays:
 
 ```{code-cell} ipython3
 jnp.sum(a)
 ```
 
-The term `Device` refers to the hardware accelerator (GPU or TPU), although JAX falls back to the CPU if no accelerator is detected.
+JAX arrays are allocated on the `device`.
+
+Here `device` refers to the hardware accelerator (GPU or TPU), although JAX falls back to the CPU if no accelerator is detected.
 
 (In the terminology of GPUs, the "host" is the machine that launches GPU operations, while the "device" is the GPU itself.)
+
 
 +++
 
@@ -305,7 +308,6 @@ random.normal(key, (5, ))
 
 ## JIT Compilation
 
-+++
 
 The JAX JIT compiler accelerates logic within functions by fusing linear algebra operations into a single, highly optimized kernel that the host can launch on the GPU / TPU (or CPU if no accelerator is detected).
 
@@ -553,24 +555,35 @@ Here's one update step of gradient ascent
 
 ```{code-cell} ipython3
 f_grad = jax.grad(f)
+
 def update(x, f, f_grad, alpha=0.01):
     return x + alpha * f_grad(x)
 
 x_0 = jnp.array((0.7, 0.7))
-x_0
+
 update(x_0, f, f_grad)
 ```
 
-Let's vectorize it:
+Let's vectorize it.
 
 ```{code-cell} ipython3
 update_vec = jax.vmap(update, (0, None, None))
+```
+
+Let's test that this works as expected.
+
+```{code-cell} ipython3
 key = jax.random.PRNGKey(1)
 n = 1000
-xs = random.uniform(key, (n, 2), minval=-3.0, maxval=3.0)
+xs = jax.random.uniform(key, (n, 2), minval=-3.0, maxval=3.0)
 xs
+```
+
+```{code-cell} ipython3
 update_vec(xs, f, f_grad)
 ```
+
+We have updated every 2-vector in `xs` (every row) using the update rule.
 
 The exercise is to run this in a loop and compute an approximate maximum of
 the function.
@@ -607,13 +620,16 @@ def gradient_ascent(f, f_grad, x_0, tol=1e-8, alpha=1e-2, max_iter=10_000):
     error = tol + 1
     x = x_0
     i = 0
+    current_max = - jpn.inf
     while error > tol and i < max_iter:
         y = update_vec(x, f, f_grad)
-        error = jnp.linalg.norm(x - y)
+        new_max = jnp.max(jax.vmap(f)(x))
+        error = abs(new_max - current_max)
+        current_max = new_max
         x = y
         i += 1
         
-    return jnp.max(jax.vmap(f)(x)), i
+    return current_max, i
 ```
 
 Now let's call it, starting from `xs`

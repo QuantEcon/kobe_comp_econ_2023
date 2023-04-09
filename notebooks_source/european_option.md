@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.1
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -38,7 +38,6 @@ import matplotlib.pyplot as plt
 import numba
 from numpy.random import randn
 ```
-
 
 ## Pricing a European Call Option under Risk Neutrality
 
@@ -190,8 +189,6 @@ Use the following parameter values:
 ```
 
 ```{code-cell} ipython3
-:tags: []
-
 K = 1
 n = 10
 β = 0.95
@@ -204,9 +201,13 @@ M = 10_000_000
 ```
 
 ```{code-cell} ipython3
-# Put your code here
+S = np.exp(μ + σ * np.random.randn(M))
+P = β**n * np.mean(np.maximum(S - K, 0))
 ```
 
+```{code-cell} ipython3
+print(P)
+```
 
 solution below
 
@@ -231,7 +232,6 @@ solution below
 solution below
 
 solution below
-
 
 ```{code-cell} ipython3
 S = np.exp(μ + σ * np.random.randn(M))
@@ -262,44 +262,9 @@ where
 * $\{ \xi_t \}$ is IID and standard normal.  
 
 
-**Exercise**
+Under the stated assumptions, $S_n$ is lognormally distributed.
 
-Show that, under the stated assumptions, $S_n$ is lognormally distributed.
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-solution below
-
-With $s_t := \ln S_t$, the price dynamics become
-
-$$ s_{t+1} = s_t + \mu + \sigma \xi_{t+1} $$
-
-Since $s_0$ is normal and $\xi_1$ is normal and IID, we see that $s_1$ is
-normally distributed.
-
-Continuing in this way shows that $s_n$ is normally distributed.
-
-Hence $S_n = \exp(s_n)$ is lognormal.
+**Exercise**  Explain why this is true.
 
 
 ### Problems with Simple Dynamics
@@ -352,8 +317,6 @@ h0 = 0
 For the option we use the following defaults.
 
 ```{code-cell} ipython3
-:tags: []
-
 K = 100
 n = 10
 β = 0.95
@@ -451,7 +414,6 @@ In particular, try to speed up the code above using `jit` or `njit` from Numba.
 # Put your code here
 ```
 
-
 solution below
 
 solution below
@@ -475,7 +437,6 @@ solution below
 solution below
 
 solution below
-
 
 ```{code-cell} ipython3
 from numba import njit, prange
@@ -520,7 +481,6 @@ If you can, use `prange` from Numba to parallelize this code and make it even fa
 # Put your code here
 ```
 
-
 solution below
 
 solution below
@@ -544,7 +504,6 @@ solution below
 solution below
 
 solution below
-
 
 ```{code-cell} ipython3
 @njit(parallel=True)
@@ -603,7 +562,6 @@ Try to shift the whole operation to the GPU using JAX and test your speed gain.
 # Put your code here
 ```
 
-
 solution below
 
 solution below
@@ -627,7 +585,6 @@ solution below
 solution below
 
 solution below
-
 
 ```{code-cell} ipython3
 !nvidia-smi
