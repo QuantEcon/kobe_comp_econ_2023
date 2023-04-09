@@ -14,14 +14,18 @@ kernelspec:
 
 # Accelerating Python
 
-+++
-
 [John Stachurski](http://johnstachurski.net)
+
+This notebook demonstrates ways of accelerating plain Python code in
+scientific applications.
+
+We begin by importing some libraries that will be discussed below.
 
 
 ```{code-cell} ipython3
 import numpy as np
-from numba import jit
+import numba 
+from numba import vectorize, float64
 import matplotlib.pyplot as plt
 import jax
 import jax.numpy as jnp
@@ -31,13 +35,17 @@ import jax.numpy as jnp
 
 ## Problem 1: A Time Series Model
 
-+++
-
 Consider the time series model
 
 $$ x_{t+1} = \alpha x_t (1 - x_t) $$
 
-Let's set $\alpha = 4$
+
+Our aim is to generate time series from this model and analyze them.
+
+We will show how to accelerate this operation.
+
+To begin, let's set $\alpha = 4$
+
 
 ```{code-cell} ipython3
 α = 4
@@ -120,7 +128,7 @@ PROGRAM MAIN
  X = QUAD(0.2_dp, N)
  CALL CPU_TIME(FINISH)
  PRINT *,'last val = ', X
- PRINT *,'elapsed time = ', FINISH-START
+ PRINT *,'Elapsed time in milliseconds = ', (FINISH-START) * 1000
 END PROGRAM MAIN
 ```
 
@@ -140,10 +148,10 @@ END PROGRAM MAIN
 
 Let's try `codon`, an AOT Python compiler
 
-First we have to install it.
+First we install it --- if not yet installed, please uncomment
 
 ```{code-cell} ipython3
-!/bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
+# !/bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
 ```
 
 Now we write Python code to a file.
@@ -168,7 +176,7 @@ t0 = time()
 x = quad(0.1, n)
 t1 = time()
 print(x)
-print(t1 - t0)
+print("Elapsed time in milliseconds: ", (t1 - t0) * 1000)
 ```
 
 Next we compile the Python code to build an executable.
@@ -204,7 +212,7 @@ Here's the Python function we want to speed up
 
 
 ```{code-cell} ipython3
-@jit
+@numba.jit
 def quad(x0, n):
     x = x0
     for i in range(1, n):
@@ -213,7 +221,7 @@ def quad(x0, n):
 ```
 
 This is the same as before except that we've targeted the function for JIT
-compilation with `@jit`.
+compilation with `@numba.jit`.
 
 Let's see how fast it runs.
 
@@ -300,7 +308,7 @@ np.max(f(x, y))
 A jitted version
 
 ```{code-cell} ipython3
-@jit
+@numba.jit
 def compute_max():
     m = -np.inf
     for x in grid:
@@ -348,12 +356,23 @@ np.max(f_par(x, y))
 
 Now let's try JAX.
 
+This code will work well if you have a GPU and JAX configured to use it.
+
+Let's see what we have available.
+
+```{code-cell} ipython3
+!nvidia-smi
+```
+
+
 Warning --- you need a GPU with relatively large memory for this to work.
+
 
 ```{code-cell} ipython3
 def f(x, y):
     return jnp.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
 ```
+
 
 ```{code-cell} ipython3
 grid = np.linspace(-3, 3, 10000)
@@ -361,12 +380,35 @@ grid = np.linspace(-3, 3, 10000)
 x, y = jnp.meshgrid(grid, grid)
 ```
 
+Here's our timing.
+
 ```{code-cell} ipython3
 %%time
 
 jnp.max(f(x, y))
 ```
 
+
+```{code-cell} ipython3
+@jax.jit
+def f(x, y):
+    return jnp.cos(x**2 + y**2) / (1 + x**2 + y**2) + 1
+```
+
+Let's JIT-compile the function and see if anything changes.
+
+```{code-cell} ipython3
+%%time
+
+jnp.max(f(x, y))
+```
+
+
+```{code-cell} ipython3
+%%time
+
+jnp.max(f(x, y))
+```
 
 
 ## Problem 3: Monte Carlo
