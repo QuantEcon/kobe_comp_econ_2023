@@ -73,10 +73,23 @@ Let's apply this to find the positive root of $f(x) = x^2 - 1$.
 def f(x):
     return x**2 - 1
 
+x_grid = np.linspace(-1, 2, 200)
+fig, ax = plt.subplots()
+ax.plot(x_grid, f(x_grid), label="$f$")
+ax.plot(x_grid, np.zeros_like(x_grid), "k--")
+ax.legend()
+plt.show()
+
+```
+
+Here we call `newton`.
+
+```{code-cell} ipython3
 newton(f, 0.5)   # search for root of f starting at x_0 = 0.5
 ```
 
-We didn't supply the gradient of $f$ so it was approximated numerically.  
+In the last call we didn't supply the gradient of $f$, so it was approximated
+numerically.  
 
 We can supply it as follows:
 
