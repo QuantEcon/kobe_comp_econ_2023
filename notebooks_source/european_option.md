@@ -200,14 +200,6 @@ Set the simulation size to
 M = 10_000_000
 ```
 
-```{code-cell} ipython3
-S = np.exp(μ + σ * np.random.randn(M))
-P = β**n * np.mean(np.maximum(S - K, 0))
-```
-
-```{code-cell} ipython3
-print(P)
-```
 
 solution below
 
